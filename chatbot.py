@@ -2,6 +2,7 @@ import streamlit as st
 from langchain_core.prompts.prompt import PromptTemplate
 from multi_doc_class import MultiDocAgent
 from langchain_openai import ChatOpenAI
+from llama_index.llms.mistralai import MistralAI
 
 #Vector search output
 @st.cache_resource
@@ -10,7 +11,8 @@ def get_agent():
     agent=multiDocAgent.get_agent("data")
     return agent
 
-llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0.5,top_p=0.5,max_tokens=4096,presence_penalty=1.0)
+#llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0.5,top_p=0.5,max_tokens=4096,presence_penalty=1.0)
+llm = MistralAI(model="mistral-large-latest")
 agent = get_agent()
 def invoke_agent(query,agent):
     print("QUERY:"+query)
@@ -20,7 +22,7 @@ def invoke_agent(query,agent):
         context+=node.get_text()
     return response,context
 
-st.title("A Streamlit powered Multi-document Chatbot Demo using MistralAI, OpenAI and Agentic RAG with Llamaindex")
+st.title("A Streamlit powered Multi-document Chatbot with Agentic RAG with Llamaindex supported by LLM")
 
 st.header("Type exit to discontinue a conversation and start a new one")
 
@@ -36,20 +38,18 @@ if "ConvCtr" not in st.session_state:
 for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
-
 if query := st.chat_input():
     response=""
     if (query=="exit"):
         st.session_state["chat_history"]=[]
-        #st.chat_message("assistant").write("Goodbye!")
         st.session_state["ConvCtr"]=0
     else:
         st.session_state["ConvCtr"] += 1
 
     if (st.session_state["ConvCtr"]==1):
-        #do vector search
+        #invoke agentic RAG
         response,context = invoke_agent(query,agent)
-        print("RESPONSE from Llama index:" + str(response))
+        print("RESPONSE from Llama index Agent:" + str(response))
 
         chat_history = st.session_state["chat_history"]
         prompt_template=PromptTemplate.from_template(""" \n
@@ -62,6 +62,7 @@ if query := st.chat_input():
         st.session_state["chat_history"].append((prompt,str(response)))
 
     elif(st.session_state["ConvCtr"]>1):
+        #Get context from chat history
         chat_history = st.session_state["chat_history"]
 
         prompt_template = PromptTemplate.from_template(""" \n
@@ -72,9 +73,9 @@ if query := st.chat_input():
                        AI :         
                        """)
         prompt = prompt_template.format(chat_history=chat_history, input=query)
-        response=llm.predict(text=prompt)
-        print("RESPONSE from OPENAI:"+response)
-        st.session_state["chat_history"].append((prompt, response))
+        response=llm.complete(prompt)
+        print("RESPONSE from LLM:"+str(response))
+        st.session_state["chat_history"].append((prompt, str(response)))
 
     if (st.session_state["ConvCtr"] >= 1):
         st.chat_message("user").write(query)

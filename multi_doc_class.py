@@ -13,6 +13,9 @@ from llama_index.core.agent import AgentRunner
 from llama_index.core import VectorStoreIndex
 from llama_index.core.objects import ObjectIndex
 from llama_index.core import load_index_from_storage
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.core import Settings
+
 
 class MultiDocAgent(object):
 
@@ -32,16 +35,20 @@ class MultiDocAgent(object):
             get vector query and summary query tools from a set of documents in a path
             '''
             # load documents
+            Settings.embed_model = HuggingFaceEmbedding(
+                model_name="BAAI/bge-small-en-v1.5"
+            )
+            Settings.llm = MistralAI(model="mistral-large-latest")
 
             documents = SimpleDirectoryReader(input_files=[file_path]).load_data()
             splitter = SentenceSplitter(chunk_size=1024, chunk_overlap=100)
             nodes = splitter.get_nodes_from_documents(documents)
             print(f"Length of nodes : {len(nodes)}")
-            # instantiate Vectorstore
+            # instantiate VectorstoreIndex
             vector_index = VectorStoreIndex(nodes, storage_context=storage_context)
             vector_index.storage_context.vector_store.persist(persist_path="chroma_db")
 
-            # Define Vectorstore Autoretrieval tool
+            # Define Vectorstore Auto retrieval tool
             def vector_query(query: str, page_numbers: Optional[List[str]] = None) -> str:
                 '''
                 perform vector search over index on
@@ -60,7 +67,7 @@ class MultiDocAgent(object):
                 response = query_engine.query(query)
                 return response
 
-            # llamiondex FunctionTool wraps any python function we feed it
+            # llamaindex FunctionTool wraps any python function we feed it
             vector_query_tool = FunctionTool.from_defaults(name=f"vector_tool_{name}",
                                                            fn=vector_query)
             # Prepare Summary Tool
@@ -95,7 +102,6 @@ class MultiDocAgent(object):
 
         obj_index = ObjectIndex.from_objects(initial_tools, index_cls=VectorStoreIndex)
         obj_retriever = obj_index.as_retriever(similarity_top_k=2)
-
 
         llm = MistralAI(model="mistral-large-latest")
         agent_worker = FunctionCallingAgentWorker.from_tools(tool_retriever=obj_retriever,
