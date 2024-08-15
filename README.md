@@ -1,7 +1,7 @@
 <h1> Streamlit chatbot with Agentic RAG and Information Extractor </h1>
 
 <p>To run the chatbot, install the necessary libs from requirements.txt <br>
-The solution uses OpenAI, Mistral AI and Google Gemini-1.5-Flash<br>
+The solution uses OpenAI, Mistral AI with llamaindex for the Agentic RAG and Google Gemini-1.5-Flash for Image text inference<br>
 Signup for Openai, Mistral AI, and Google Gemini (Generative AI Studio), and get the keys for each.<br>
 Set the env variables:<br>
 export OPENAI_API_KEY=<br>
