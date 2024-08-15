@@ -5,7 +5,7 @@ from langchain_openai import ChatOpenAI
 from llama_index.llms.mistralai import MistralAI
 from image_extractor import ImageExtractor
 
-#Vector search output
+
 @st.cache_resource
 def get_agent():
     multiDocAgent=MultiDocAgent()
@@ -18,7 +18,7 @@ def get_imageExtractor():
     return imageExt
 
 llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0.5,top_p=0.5,max_tokens=4096,presence_penalty=1.0)
-#llm = MistralAI(model="mistral-large-latest")
+#llm = MistralAI(model="mistral-large-latest") #the LLM can be switched to MistralAI, if using MistralAI, the cmd is llm.complete
 agent = get_agent()
 img_ext = get_imageExtractor()
 

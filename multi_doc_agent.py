@@ -48,14 +48,12 @@ class MultiDocAgent(object):
 
             else:
                 vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
-                #storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
                 vector_index = VectorStoreIndex.from_vector_store(vector_store)
                 nodes = vector_index.storage_context.vector_store._get(limit=sys.maxsize, where={}).nodes
 
                 #print(f"Length of nodes from persist path: {len(nodes)}")
 
-                #vector_index = VectorStoreIndex(nodes, storage_context=storage_context)
             return vector_index, nodes
 
         def get_doc_tools(file_name: str, name: str) -> str:
@@ -64,7 +62,7 @@ class MultiDocAgent(object):
             '''
             # load documents
 
-            #Replace default OpenAI LLM with open source MistralAI in Llama Index
+            #Uncomment these lines to Replace default OpenAI LLM with open source MistralAI in Llama Index
             #Ref https://docs.llamaindex.ai/en/stable/module_guides/models/embeddings/
             #https://docs.llamaindex.ai/en/stable/module_guides/models/llms/usage_custom/
 
@@ -74,7 +72,7 @@ class MultiDocAgent(object):
             # Settings.llm = MistralAI(model="mistral-large-latest")
 
             nodes = []
-            index_nm=""
+
             # load documents
             if (file_name.startswith("data/An_Introduction")):
                 index_nm = "SpaceExploration"
@@ -142,8 +140,6 @@ class MultiDocAgent(object):
 
         obj_index = ObjectIndex.from_objects(initial_tools, index_cls=VectorStoreIndex)
         obj_retriever = obj_index.as_retriever(similarity_top_k=2)
-
-        #print(obj_retriever)
 
         #Ref https://docs.llamaindex.ai/en/stable/examples/llm/mistralai/
         llm = MistralAI(model="mistral-large-latest")

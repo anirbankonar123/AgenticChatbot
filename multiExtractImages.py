@@ -1,9 +1,9 @@
 import fitz
-from PIL import Image, ImageDraw
+from PIL import Image
+import torch
+
 output_directory_path = "data_output2"
 pdf_file = "data/An_Introduction_to_Space_Exploration_TPDas.pdf"
-    #"data/The_Lunar_Saga_edition2.pdf"
-import torch
 
 pdf_document = fitz.open(pdf_file)
 
