@@ -14,6 +14,9 @@ llama-index-llms-openai
 llama-index-embeddings-openai
 langchain-openai
 langchain-core
+langchain-google-genai
+matplotlib
+fitz
 streamlit
 
 
