@@ -16,7 +16,7 @@ the images from the PDF and store in output folders<br>
 Edit the chatbot.py and make sure the same image output folders are specified in line 149,150,151
 msg = img_ext.get_response(query,"data_output") <br>
 
-Make sure the same data folder is specified in line 12
+Make sure the same data folder is specified in line 12, where the pdf files are located
 agent=multiDocAgent.get_agent("data")<br>
 
 Run the chatbot using : streamlit run chatbot.py<br>
@@ -27,7 +27,7 @@ Use cmd : python testAgent.py<br>
 Specify the correct data folder, and input a query<br>
 </p>
 
-<p> To test the Image based RAG:<br>
-Use cmd : python test_ImgExt.py<br>
-Specify the correct image data folder, and input a query<br>
+<p> To test the Image based RAG using Gemini 1.5 flash:<br>
+Use cmd : python testImg.py<br>
+Specify the correct image file path in line 57 and input a query <br>
 </p>
