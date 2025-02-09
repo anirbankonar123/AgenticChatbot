@@ -31,3 +31,4 @@ Specify the correct data folder, and input a query<br>
 Use cmd : python testImg.py<br>
 Specify the correct image file path in line 57 and input a query <br>
 </p>
+<p> Ref : https://youtu.be/LiVOx0Rp4oI</p>
