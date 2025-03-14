@@ -32,3 +32,6 @@ Use cmd : python testImg.py<br>
 Specify the correct image file path in line 57 and input a query <br>
 </p>
 <p> Ref : https://youtu.be/LiVOx0Rp4oI</p>
+
+![AgenticRAG](https://github.com/user-attachments/assets/febea62b-efb2-49b8-ac7c-cd29f882a8d1)
+
